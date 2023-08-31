@@ -11,3 +11,4 @@ async def send_report(event):
                 report += f"{msg['user']}: {msg['text']}\n"
 
         await event.reply(report)
+
