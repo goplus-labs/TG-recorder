@@ -4,20 +4,24 @@ from telethon import events
 import config
 import message_handler
 import schedule
+import openai
+from config import OPENAI_API_KEY, SUMMARY_GROUP_ID
 import time
-
-# Set the id of group
-SUMMARY_GROUP_ID = -1001826795915
 
 
 async def send_daily_summary(client):
-    today_messages = message_handler.get_today_messages()
-    if not today_messages:
-        summary = "Nothing happened today"
-    else:
-        summary = "Daily Security News：\n\n"
-        for msg in today_messages:
-            summary += f"{msg['date']} - {msg['user']}: {msg['text']}\n"
+    all_messages = message_handler.get_today_messages()
+    print(all_messages)
+    messages_text = '\n'.join([msg['text'] for msg in all_messages])
+    print(messages_text)
+    openai.api_key = OPENAI_API_KEY
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=f"Summarize today's group chat:\n\n{messages_text}\n\nSummary, and make it into a daily report using bulletlist"
+    )
+
+    summary = response.choices[0].text.strip()
+
     await client.send_message(SUMMARY_GROUP_ID, summary)
 
 

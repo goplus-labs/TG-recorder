@@ -1,7 +1,11 @@
 import datetime
 import json
+from config import SUMMARY_GROUP_ID
+from telethon.utils import get_display_name
 
-TARGET_GROUP_ID = -923030708
+from main import send_daily_summary
+
+TARGET_GROUP_ID = -1001372269197
 
 
 def load_messages_from_file():
@@ -36,5 +40,9 @@ async def handle_new_message(event):
         }
         all_messages.append(message_data)
         save_messages_to_file()
+
+    if event.is_group and event.chat_id == SUMMARY_GROUP_ID:
+        if "Daily Report" in event.raw_text and event.mentioned:
+            await send_daily_summary(event.client)
 
 
