@@ -12,7 +12,10 @@ import json
 
 def remove_first_last_two_lines(s):
     lines = s.splitlines()
-    return '\n'.join(lines[0:-1])
+    if "🚀" not in lines[0]:
+        return '\n'.join(lines[1:-1])
+    else:
+        return '\n'.join(lines[0:-1])
 
 
 async def send_daily_summary(client):
