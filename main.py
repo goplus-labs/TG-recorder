@@ -65,23 +65,25 @@ async def send_daily_summary(client):
             {"role": "user", "content": f"{messages_str}"}
         ]
     )
-    response_en = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        messages=[
-            {"role": "assistant", "content": english_summary_prompt},
-            {"role": "user", "content": f"{messages_str}"}
-        ]
-    )
+    # response_en = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo-16k",
+    #     messages=[
+    #         {"role": "assistant", "content": english_summary_prompt},
+    #         {"role": "user", "content": f"{messages_str}"}
+    #     ]
+    # )
 
     summary_cn = response_cn.choices[0].message.content.strip()
-    summary_en = response_en.choices[0].message.content.strip()
+    # summary_en = response_en.choices[0].message.content.strip()
     summaries_cn = split_long_message(summary_cn)
-    summaries_en = split_long_message(summary_en)
+    # summaries_en = split_long_message(summary_en)
 
     for part in summaries_cn:
         await client.send_message(-1001826795915, part)
-    for part in summaries_en:
+    for part in summaries_cn:
         await client.send_message(-923030708, part)
+    # for part in summaries_en:
+    #     await client.send_message(-923030708, part)
 
 
 async def main():
