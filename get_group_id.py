@@ -9,7 +9,7 @@ async def list_groups(client):
             print(f"Group name: {dialog.name}. ID: {dialog.id}")
 
 
-with TelegramClient(StringSession(), config.API_ID, config.API_HASH, proxy=config.PROXY) as client:
+with TelegramClient(StringSession(config.SESSION_STRING), config.API_ID, config.API_HASH, proxy=config.PROXY) as client:
     if not client.is_user_authorized():
         client.send_code_request(config.PHONE_NUMBER)
         client.sign_in(config.PHONE_NUMBER, input('Enter the code: '))

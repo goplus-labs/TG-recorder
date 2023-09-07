@@ -14,16 +14,22 @@ messages_str = json.dumps(all_messages, indent=2)
 messages_text = '\n'.join([msg['text'] for msg in all_messages])
 openai.api_key = OPENAI_API_KEY
 response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
-            {"role": "system", "content": "You are a very knowledgeable assistant in web3 and security."},
-            {"role": "user", "content": "Hello"},
-            {"role": "assistant", "content": f"We are a media focused on Web3 Security. I would like you to \
-            help me summarize all the messages from a Telegram group called ETHSecurity Community, extract and \
-            refine information related to Web3 security, filter out irrelevant information, and create a daily \
-            report without emphasizing the speaker's information. Below is the JSON of the messages I crawled\
-            :{messages_str}, I would like the output to look something like this: 🚀2023-08-31\nNEAR has gotten \
-            some nice criticals with their program \n2. xxx \n3. xxx"},
+            {"role": "assistant", "content": f"你是一个中文的群聊总结的助手，你可以为一个telegram的群聊记录，提取并总结每个时间段大家在重点讨论的话题内容。\
+            请帮我将给出的群聊内容总结成一个今日的群聊报告，包含不多于10个的话题的总结（如果还有更多话题，可以在后面简单补充）。每个话题包含以下内容：\
+            - 话题名(50字以内，带序号1️⃣2️⃣3️⃣，同时附带热度，以🔥数量表示）\n\
+            - 参与者(不超过5个人，将重复的人名去重) \n\
+            - 时间段(从几点到几点) \n\
+            - 过程(50到200字左右）\n\
+            - 评价(50字以下) \n\
+            - 分割线： ------------ \n\
+            另外有以下要求：\
+            1. 每个话题结束使用 ------------ 分割 \
+            2. 使用中文冒号 \
+            3. 整段总结的大标题为 📰[当日日期]Daily Report \
+            4. 总结内容得是中文 \
+            以下是群聊内容:"},
             {"role": "user", "content": f"{messages_str}"}
         ]
     )
