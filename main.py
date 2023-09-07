@@ -10,6 +10,10 @@ import time
 import json
 
 
+def split_long_message(message, max_length=4096):
+    return [message[i:i+max_length] for i in range(0, len(message), max_length)]
+
+
 def remove_first_last_two_lines(s):
     lines = s.splitlines()
     if "🚀" not in lines[0]:
@@ -48,7 +52,8 @@ async def send_daily_summary(client):
     In addition, the following requirements should be met: \
     1. Use a divider of ------------ at the end of each topic \
     2. The main title of the entire summary should be 📰[Today's Date] Daily Report \
-    3. The summary content should be in English"
+    3. The summary content should be in English \
+    Here is the group chat content:"
     all_messages = message_handler.get_today_messages()
     messages_text = '\n'.join([msg['text'] for msg in all_messages])
     messages_str = json.dumps(all_messages, indent=2)
@@ -70,8 +75,13 @@ async def send_daily_summary(client):
 
     summary_cn = response_cn.choices[0].message.content.strip()
     summary_en = response_en.choices[0].message.content.strip()
-    await client.send_message(-923030708, summary_en)
-    await client.send_message(-1001826795915, summary_cn)
+    summaries_cn = split_long_message(summary_cn)
+    summaries_en = split_long_message(summary_en)
+
+    for part in summaries_cn:
+        await client.send_message(-1001826795915, part)
+    for part in summaries_en:
+        await client.send_message(-923030708, part)
 
 
 async def main():
