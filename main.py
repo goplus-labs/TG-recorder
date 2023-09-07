@@ -48,8 +48,8 @@ async def send_daily_summary(client):
 
     summary = response.choices[0].message.content.strip()
     summary = remove_first_last_two_lines(summary)
-    for group_id in SUMMARY_GROUP_ID:
-        await client.send_message(group_id, summary)
+    await client.send_message(-923030708, summary)
+    await client.send_message(-1001826795915, summary)
 
 
 async def main():
